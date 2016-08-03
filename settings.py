@@ -20,7 +20,7 @@ MYCOOKIES = {
              '|1470107809|4398a685f707fad40550bb853b14c06c22c61d91'),
     'n_c': '1',
     'a_t': ('"2.0AEAAZqlVSQoXAAAAoZ3HVwBAAGapVUkKABDALIVoQAoXAAAAYQJVTaGdx1cABWLIg'
-        '0PP5OLc6Ao-yP5fvqB6qeDX5Mej6T85JiurRRbkHDKRyEbDSQ=="'),
+            '0PP5OLc6Ao-yP5fvqB6qeDX5Mej6T85JiurRRbkHDKRyEbDSQ=="'),
     's-q': 'zhang\'jia\'wei',
     's-i': '2',
     'sid': 'laul6c68',
@@ -30,7 +30,7 @@ MYCOOKIES = {
     '__utmb': '51854390.2.10.1470133148',
     '__utmc': '51854390',
     '__utmz': ('51854390.1470133148.11.9.utmcsr=zhihu.com|utmccn=(referral)|'
-        'utmcmd=referral|utmcct=/people/lu-jian-yao-qing-60/followees'),
+               'utmcmd=referral|utmcct=/people/lu-jian-yao-qing-60/followees'),
     '__utmv': '51854390.100--|2=registration_date=20160726=1^3=entry_date=20160726=1',
 }
 
