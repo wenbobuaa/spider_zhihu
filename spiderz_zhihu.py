@@ -18,7 +18,7 @@ class Spider_zhihu():
     def get_user_data(self):
         # 获取用户信息
         # 核心部分
-        followee_url = self.url + '/followees'
+        followee_url = self.url.decode('utf-8') + '/followees'
         try:
             request = requests.get(
                 followee_url,
@@ -27,7 +27,7 @@ class Spider_zhihu():
                 verify=False
             )
         except:
-            print 'request error!'
+            print('request error!')
             return
 
         if request.status_code == 200:
@@ -41,17 +41,18 @@ class Spider_zhihu():
         self.user_name = self.get_xpath_source(tree.xpath(settings.ZHIHU_NAME))
         self.user_location = self.get_xpath_source(tree.xpath(settings.ZHIHU_LOCATION))
         self.user_gender = self.get_xpath_source(tree.xpath(settings.ZHIHU_GENDER))
-        if self.user_gender and 'female' in self.user_gender:
-            self.user_gender = 'female'
+        if self.user_gender and u'female' in self.user_gender:
+            self.user_gender = u'female'
         else:
-            self.user_gender = 'male'
+            self.user_gender = u'male'
         self.user_employment = self.get_xpath_source(tree.xpath(settings.ZHIHU_EMPLOYMENT))
         self.user_employment_extra = self.get_xpath_source(tree.xpath(settings.ZHIHU_EMPLOYMENT_EXTRA))
         self.user_education_school = self.get_xpath_source(tree.xpath(settings.ZHIHU_EDUCATION))
         self.user_education_subject = self.get_xpath_source(tree.xpath(settings.ZHIHU_EDUCATION_EXTRA))
+
         try:
-            self.user_followees = tree.xpath(settings.ZHIHU_FOLLOW)[0].text
-            self.user_followers = tree.xpath(settings.ZHIHU_FOLLOW)[1].text
+            self.user_followees = tree.xpath(settings.ZHIHU_FOLLOW)[0]
+            self.user_followers = tree.xpath(settings.ZHIHU_FOLLOW)[1]
         except:
             return
         self.user_be_agreed = self.get_xpath_source(tree.xpath(settings.ZHIHU_AGREED))
@@ -60,6 +61,7 @@ class Spider_zhihu():
         self.user_intro = self.get_xpath_source(tree.xpath(settings.ZHIHU_USER_INTRO))
 
         if self.option == settings.OUTPUT:
+            # self.decode('utf-8')
             self.print_data_out()
         else:
             self.store_data_to_mongod()
@@ -69,8 +71,8 @@ class Spider_zhihu():
         # 提取出被关注者的url
         url_list = tree.xpath(settings.ZHIHU_FOLLOWEE_URL)
         for target_url in url_list:
-            if red.sadd('red_had_spider', target_url):
-                red.lpush('red_to_spider', target_url)
+            if red.sadd('had_spidered', target_url):
+                red.lpush('to_spider', target_url)
 
     def get_xpath_source(self, source):
         if source:
@@ -79,15 +81,18 @@ class Spider_zhihu():
             return ''
 
     def print_data_out(self):
-        print '用户名：{user_name}'.format(user_name=self.user_name)
-        print '用户性别：{user_gender}'.format(user_gender=self.user_gender)
-        print '被感谢：{thanked}'.format(thanked=self.user_be_thanked)
-        print '被赞同：{agreed}'.format(agreed=self.user_be_agreed)
-        print '工作地：{location}'.format(location=self.user_location)
-        print '行业：{employment}'.format(employment=self.user_employment)
-        print '工作信息：{employment_extra}'.format(employment_extra=self.user_employment_extra)
-        print '教育信息：{school}/{subject}'.format(school=self.user_education_school, subject=self.user_education_subject)
-        print '个人简介：{info}'.format(info=self.user_info)
+        print(u'用户名：{user_name}'.format(user_name=self.user_name))
+        print(u'用户性别：{user_gender}'.format(user_gender=self.user_gender))
+        print(u'被感谢：{thanked}'.format(thanked=self.user_be_thanked))
+        print(u'被赞同：{agreed}'.format(agreed=self.user_be_agreed))
+        print(u'工作地：{location}'.format(location=self.user_location))
+        print(u'行业：{employment}'.format(employment=self.user_employment))
+        print(u'工作信息：{employment_extra}'.format(employment_extra=self.user_employment_extra))
+        print(u'教育信息：{school}/{subject}'.format(
+            school=self.user_education_school,
+            subject=self.user_education_subject)
+        )
+        print(u'个人简介：{info}'.format(info=self.user_info))
 
     def store_data_to_mongod(self):
         pass
@@ -95,17 +100,19 @@ class Spider_zhihu():
 
 def bfs_search(option):
     global red
+    time = 10
 
-    while True:
+    while time > 0:
         url = red.rpop('to_spider')
         if url:
             red.sadd('had_spidered', url)
             spider = Spider_zhihu(url, option)
             spider.get_user_data()
+            time -= 1
         else:
             break
 
-    print '完成。'
+    print(u'完成。')
     return
 
 if __name__ == '__main__':
