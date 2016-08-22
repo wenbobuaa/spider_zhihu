@@ -4,6 +4,7 @@ import requests
 import redis
 
 import settings
+from mongodb import Zhihu_User_Profile
 
 
 class Spider_zhihu():
